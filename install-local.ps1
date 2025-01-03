@@ -1,0 +1,1 @@
+dotnet tool install --add-source ./alamos-kalender-import/nupkg alamos-kalender-import

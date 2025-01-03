@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "alamos-kalender-import": {
+      "version": "1.0.1",
+      "commands": [
+        "alamos-kalender-import"
+      ],
+      "rollForward": false
+    }
+  }
+}
