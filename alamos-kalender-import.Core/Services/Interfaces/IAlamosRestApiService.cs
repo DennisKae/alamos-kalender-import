@@ -18,5 +18,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services.Interfaces
         
         [Post("/rest/eventPlanning/calendars/{calendarId}/events?notify=false")]
         Task<CreateCalendarEventViewModel> CreateCalendarEvent([Query]string calendarId, CreateCalendarEventViewModel model);
+        
+        [Delete("/rest/eventPlanning/calendars/{calendarId}/events/{calendarEventId}?deleteSeries=false")]
+        Task DeleteCalendarEvent([Query]string calendarId, [Query]string calendarEventId);
     }
 }

@@ -117,6 +117,18 @@ namespace DennisKae.alamos_kalender_import.Core.Services
 
             IAlamosRestApiService alamosRestApiService = await GetRestApiService();
             return await alamosRestApiService.CreateCalendarEvent(request.CalendarEvent.CalendarId, request);
+        }        
+        
+        /// <summary>Löscht einen Kalendereintrag</summary>
+        public async Task DeleteCalendarEvent(string calenderId, string calendarEventId)
+        {
+            Guard.Against.NullOrWhiteSpace(calenderId, nameof(calenderId));
+            Guard.Against.NullOrWhiteSpace(calendarEventId, nameof(calendarEventId));
+            
+            EnsureInitialization();
+
+            IAlamosRestApiService alamosRestApiService = await GetRestApiService();
+            await alamosRestApiService.DeleteCalendarEvent(calenderId, calendarEventId);
         }
 
         private async Task<IAlamosRestApiService> GetRestApiService(bool authorize = true)

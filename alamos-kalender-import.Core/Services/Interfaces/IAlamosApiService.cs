@@ -26,5 +26,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services.Interfaces
 
         /// <summary>Erstellt einen neuen Kalendereintrag</summary>
         Task<CreateCalendarEventViewModel> CreateCalendarEvent(CreateCalendarEventViewModel request);
+
+        /// <summary>Löscht einen Kalendereintrag</summary>
+        Task DeleteCalendarEvent(string calenderId, string calendarEventId);
     }
 }

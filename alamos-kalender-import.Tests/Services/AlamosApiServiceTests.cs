@@ -87,6 +87,28 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
             Assert.IsNotNull(createdCalendarEvent.CalendarEvent);
             Assert.IsNotNull(createdCalendarEvent.CalendarEvent.Id);
         }
+        
+        [Ignore("Integrationstest")]
+        [TestMethod]
+        public async Task DeleteCalendarEventTest()
+        {
+            CalendarResponseViewModel calendar = await _alamosApiService.GetCalendarByName(_testCalendarName);
+            Assert.IsNotNull(calendar);
+
+            var request = new CreateCalendarEventViewModel
+            {
+                CalendarEvent = GetCalendarEventViewModel(calendar)
+            };
+
+            CreateCalendarEventViewModel createdCalendarEvent = await _alamosApiService.CreateCalendarEvent(request);
+            Assert.IsNotNull(createdCalendarEvent);
+            Assert.IsNotNull(createdCalendarEvent.CalendarEvent);
+            Assert.IsNotNull(createdCalendarEvent.CalendarEvent.Id);
+            
+            await _alamosApiService.DeleteCalendarEvent(calendar.Id, createdCalendarEvent.CalendarEvent.Id);
+            
+            // TODO: Prüfen ob der Eintrag auch wirklich gelöscht wurde.
+        }
 
         private CalendarEventViewModel GetCalendarEventViewModel(CalendarResponseViewModel calendar)
         {
