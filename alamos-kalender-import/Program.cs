@@ -19,6 +19,7 @@ namespace DennisKae.alamos_kalender_import
             serviceCollection.AddLogging(builder => builder.AddConsole());
             serviceCollection.AddSingleton<IUserPromptService, UserPromptService>();
             serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
+            serviceCollection.AddSingleton<IExcelService, ExcelService>();
             
             var typeRegistrar = new TypeRegistrar(serviceCollection);
             var app = new CommandApp(typeRegistrar);

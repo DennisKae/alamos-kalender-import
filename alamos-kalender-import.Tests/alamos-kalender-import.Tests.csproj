@@ -20,5 +20,11 @@
   <ItemGroup>
     <ProjectReference Include="..\alamos-kalender-import\alamos-kalender-import.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Kalender.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 </Project>

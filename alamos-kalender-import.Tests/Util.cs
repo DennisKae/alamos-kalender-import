@@ -34,7 +34,9 @@ namespace DennisKae.alamos_kalender_import.Tests
                 builder.AddDebug()
                     .AddConsole()
             );
+            
             serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
+            serviceCollection.AddSingleton<IExcelService, ExcelService>();
             
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
             
