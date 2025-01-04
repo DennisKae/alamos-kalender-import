@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DennisKae.alamos_kalender_import.Tests.Services
 {
-    // [Ignore("Integrationstest")]
+    [Ignore("Integrationstest")]
     [TestClass]
     public class AlamosApiServiceTests
     {
@@ -34,8 +34,21 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
             string apiToken = await _alamosApiService.GetApiToken();
             Assert.IsNotNull(apiToken);
         }
+        
+        [Ignore("Integrationstest")]
+        [TestMethod]
+        public async Task GetApiTokenWithCacheTest()
+        {
+            string apiToken = await _alamosApiService.GetApiTokenWithCache();
+            Assert.IsNotNull(apiToken);
+            
+            string anotherApiToken = await _alamosApiService.GetApiTokenWithCache();
+            Assert.IsNotNull(anotherApiToken);
+            
+            Assert.AreEqual(apiToken, anotherApiToken);
+        }
 
-        // [Ignore("Integrationstest")]
+        [Ignore("Integrationstest")]
         [TestMethod]
         public async Task GetCalendarsTest()
         {
