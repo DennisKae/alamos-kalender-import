@@ -32,7 +32,7 @@ namespace DennisKae.alamos_kalender_import.Tests
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder =>
                 builder.AddDebug()
-                    .AddConsole()
+                    .SetMinimumLevel(LogLevel.Debug)
             );
             
             serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();

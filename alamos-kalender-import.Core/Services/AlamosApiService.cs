@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using DennisKae.alamos_kalender_import.Core.ViewModels;
+using DennisKae.alamos_kalender_import.Core.ViewModels.RequestViewModels;
+using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -44,10 +48,10 @@ namespace DennisKae.alamos_kalender_import.Core.Services
         {
             EnsureInitialization();
 
-            IRestApiService restApiService = await GetRestApiService(false);
+            IAlamosRestApiService alamosRestApiService = await GetRestApiService(false);
             var loginRequest = new LoginRequestViewModel { Username = _username, Password = _password };
 
-            LoginResponseViewModel loginResponse = await restApiService.Login(loginRequest);
+            LoginResponseViewModel loginResponse = await alamosRestApiService.Login(loginRequest);
 
             return loginResponse.ApiToken;
         }
@@ -85,16 +89,37 @@ namespace DennisKae.alamos_kalender_import.Core.Services
             return apiToken;
         }
 
-        /// <summary>Liefert die verfügbaren Kalender</summary>
+        /// <summary>Liefert alle verfügbaren Kalender</summary>
         public async Task<List<CalendarResponseViewModel>> GetCalendars()
         {
             EnsureInitialization();
 
-            IRestApiService restApiService = await GetRestApiService();
-            return await restApiService.GetCalendars();
+            IAlamosRestApiService alamosRestApiService = await GetRestApiService();
+            return await alamosRestApiService.GetCalendars();
+        }
+        
+        /// <summary>Liefert den Kalender mit der angegebenen Bezeichnung</summary>
+        public async Task<CalendarResponseViewModel> GetCalendarByName(string name)
+        {
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            List<CalendarResponseViewModel> allCalendars = await GetCalendars();
+
+            return allCalendars?.FirstOrDefault(x=>x.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) ?? false);
+        }
+        
+        /// <summary>Erstellt einen neuen Kalendereintrag</summary>
+        public async Task<CreateCalendarEventViewModel> CreateCalendarEvent(CreateCalendarEventViewModel request)
+        {
+            Guard.Against.Null(request, nameof(request));
+            Guard.Against.Null(request.CalendarEvent, nameof(request.CalendarEvent));
+            
+            EnsureInitialization();
+
+            IAlamosRestApiService alamosRestApiService = await GetRestApiService();
+            return await alamosRestApiService.CreateCalendarEvent(request.CalendarEvent.CalendarId, request);
         }
 
-        private async Task<IRestApiService> GetRestApiService(bool authorize = true)
+        private async Task<IAlamosRestApiService> GetRestApiService(bool authorize = true)
         {
             string apiToken = authorize ? await GetApiToken() : null;
             var httpClient = new HttpClient(new AuthHeaderHandler(_logger, apiToken))
@@ -102,7 +127,15 @@ namespace DennisKae.alamos_kalender_import.Core.Services
                 BaseAddress = new Uri(_serverUrl)
             };
 
-            return RestService.For<IRestApiService>(httpClient);
+            var serializerOptions = new JsonSerializerOptions();
+            serializerOptions.Converters.Add(new DateTimeConverter());
+
+            var refitSettings = new RefitSettings
+            {
+                ContentSerializer = new SystemTextJsonContentSerializer(serializerOptions)
+            };
+            
+            return RestService.For<IAlamosRestApiService>(httpClient, refitSettings);
         }
 
         private void EnsureInitialization()

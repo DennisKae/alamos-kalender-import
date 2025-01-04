@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace DennisKae.alamos_kalender_import.Core.ViewModels
+namespace DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels
 {
+    /// <summary>Informationen über einen Kalender</summary>
     public class CalendarResponseViewModel
     {
         [JsonPropertyName("id")]

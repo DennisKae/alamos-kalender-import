@@ -34,7 +34,7 @@ namespace DennisKae.alamos_kalender_import.Core
             _logger.LogDebug($"Request: {request}");
             if (request.Content != null)
             {
-                var content = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string content = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
                 _logger.LogDebug($"Request Content: {content}");
             }
 
@@ -44,7 +44,7 @@ namespace DennisKae.alamos_kalender_import.Core
             _logger.LogDebug($"Response: {response}");
             if (response.Content != null)
             {
-                var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                string content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                 _logger.LogDebug($"Response Content: {content}");
             }
 
