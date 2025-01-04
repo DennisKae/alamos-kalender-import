@@ -1,4 +1,4 @@
-namespace alamos_kalender_import.Services
+namespace DennisKae.alamos_kalender_import.Core.Services.Interfaces
 {
     /// <summary>Service für Benutzerdialoge</summary>
     public interface IUserPromptService

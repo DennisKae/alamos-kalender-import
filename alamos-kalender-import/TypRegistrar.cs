@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
-namespace alamos_kalender_import
+namespace DennisKae.alamos_kalender_import
 {
     /// <summary>
     /// Represents a type registrar.

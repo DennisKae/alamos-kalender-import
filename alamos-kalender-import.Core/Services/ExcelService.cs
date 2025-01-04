@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using alamos_kalender_import.Models;
 using Ardalis.GuardClauses;
+using DennisKae.alamos_kalender_import.Core.Models;
 
-namespace alamos_kalender_import.Services
+namespace DennisKae.alamos_kalender_import.Core.Services
 {
     public class ExcelService
     {

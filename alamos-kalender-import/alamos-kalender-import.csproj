@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
-        <RootNamespace>alamos_kalender_import</RootNamespace>
+        <RootNamespace>DennisKae.alamos_kalender_import</RootNamespace>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>alamos-kalender-import</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -18,15 +18,18 @@
     
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
-        <Folder Include="Commands\" />
         <Folder Include="nupkg\" />
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
       <PackageReference Include="Spectre.Console" Version="0.49.1" />
       <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\alamos-kalender-import.Core\alamos-kalender-import.Core.csproj" />
     </ItemGroup>
 
 </Project>

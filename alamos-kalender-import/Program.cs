@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using alamos_kalender_import.Services;
+using DennisKae.alamos_kalender_import.Core.Services;
+using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace alamos_kalender_import
+namespace DennisKae.alamos_kalender_import
 {
     public class Program
     {
@@ -14,7 +16,9 @@ namespace alamos_kalender_import
             AnsiConsole.Write(new Rule("[yellow]Alamos Kalender Import[/]").LeftJustified());
             
             var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder => builder.AddConsole());
             serviceCollection.AddSingleton<IUserPromptService, UserPromptService>();
+            serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
             
             var typeRegistrar = new TypeRegistrar(serviceCollection);
             var app = new CommandApp(typeRegistrar);

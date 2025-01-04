@@ -1,4 +1,4 @@
-namespace alamos_kalender_import.Models
+namespace DennisKae.alamos_kalender_import.Core.Models
 {
     /// <summary>Kalendereintrag</summary>
     public class CalendarEntry

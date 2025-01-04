@@ -1,6 +1,7 @@
+using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using Spectre.Console;
 
-namespace alamos_kalender_import.Services
+namespace DennisKae.alamos_kalender_import.Core.Services
 {
     /// <summary>Service für Benutzerdialoge</summary>
     public class UserPromptService : IUserPromptService
