@@ -1,18 +1,11 @@
 using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DennisKae.alamos_kalender_import.Core;
-using DennisKae.alamos_kalender_import.Core.Services;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using DennisKae.alamos_kalender_import.Core.ViewModels;
-using DennisKae.alamos_kalender_import.Core.ViewModels.RequestViewModels;
 using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DennisKae.alamos_kalender_import.Tests.Services
@@ -126,12 +119,12 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
                 Title = "Test Title",
                 StartDate = startDate,
                 EndDate = endDate,
-                FirstNotification = new NotificationRequestViewModel
+                FirstNotification = new NotificationViewModel
                 {
                     Duration = 1,
                     TimeUnit = SharedConstants.NotificationTimeUnitHours
                 },
-                SecondNotification = new NotificationRequestViewModel
+                SecondNotification = new NotificationViewModel
                 {
                     Duration = 1,
                     TimeUnit = SharedConstants.NotificationTimeUnitDays

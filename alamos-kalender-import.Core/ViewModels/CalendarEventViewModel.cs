@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json.Serialization;
-using DennisKae.alamos_kalender_import.Core.ViewModels.RequestViewModels;
 
 namespace DennisKae.alamos_kalender_import.Core.ViewModels
 {
@@ -80,10 +79,10 @@ namespace DennisKae.alamos_kalender_import.Core.ViewModels
         public int MaxParticipants { get; set; }
 
         [JsonPropertyName("firstNotification")]
-        public NotificationRequestViewModel FirstNotification { get; set; }
+        public NotificationViewModel FirstNotification { get; set; }
         
         [JsonPropertyName("secondNotification")]
-        public NotificationRequestViewModel SecondNotification { get; set; }
+        public NotificationViewModel SecondNotification { get; set; }
 
         /// <summary>Benutzer-Rückmeldungen ein-/ausschalten. Default = ein</summary>
         [JsonPropertyName("withFeedback")]

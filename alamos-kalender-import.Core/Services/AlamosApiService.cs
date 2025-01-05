@@ -11,8 +11,6 @@ using DennisKae.alamos_kalender_import.Core.ViewModels.RequestViewModels;
 using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 using Refit;
 
 namespace DennisKae.alamos_kalender_import.Core.Services
@@ -160,7 +158,9 @@ namespace DennisKae.alamos_kalender_import.Core.Services
 
         private DateTime? GetExpirationFromApiToken(string apiToken)
         {
-            // Der JWT Token endhält keine gültige base64 payload
+            // Der JWT Token enthält keine gültige base64 payload. Somit kann seine Gültigkeitsdauer nicht ausgelesen werden.
+            // Möglicherweise wird hier eine unübliche Kodierung genutzt.
+            // TODO: Weiter analysieren und fixen.
             return DateTime.Now.AddSeconds(30);
 
             // if(string.IsNullOrWhiteSpace(apiToken))

@@ -7,6 +7,6 @@ namespace DennisKae.alamos_kalender_import.Core.Services.Interfaces
     public interface IExcelService
     {
         /// <summary>Liefert die Kalendereinträge aus dem Excel File im dem angegebenen Dateipfad.</summary>
-        List<CalendarEntry> GetCalendarEntries(string filepath);
+        List<CalendarEvent> GetCalendarEvents(string filepath);
     }
 }

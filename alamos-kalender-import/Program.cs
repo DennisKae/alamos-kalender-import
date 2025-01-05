@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Reflection;
+using System.Linq;
+using DennisKae.alamos_kalender_import.Commands;
 using DennisKae.alamos_kalender_import.Core.Services;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,32 +10,23 @@ using Spectre.Console.Cli;
 
 namespace DennisKae.alamos_kalender_import
 {
-    public class Program
+    public static class Program
     {
         public static int Main(string[] args)
         {
             AnsiConsole.Write(new Rule("[yellow]Alamos Kalender Import[/]").LeftJustified());
-            
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogging(builder => builder.AddConsole());
-            serviceCollection.AddSingleton<IUserPromptService, UserPromptService>();
-            serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
-            serviceCollection.AddSingleton<IExcelService, ExcelService>();
-            
-            var typeRegistrar = new TypeRegistrar(serviceCollection);
-            var app = new CommandApp(typeRegistrar);
-            
+
+            TypeRegistrar typeRegistrar = GetTypeRegistrar(args);
+            CommandApp<ImportExcelFileCommand> app = new(typeRegistrar);
+
             app.Configure(config =>
             {
+                config.PropagateExceptions();
 #if DEBUG
-                // config.PropagateExceptions();
-                // config.ValidateExamples();
+                config.ValidateExamples();
 #endif
-                
-                // TODO: https://spectreconsole.net/cli/getting-started
-                // TODO: continue...
             });
-            
+
             try
             {
                 return app.Run(args);
@@ -46,81 +38,29 @@ namespace DennisKae.alamos_kalender_import
             }
         }
 
-        private static int OldProgram(IServiceCollection serviceCollection, string[] args)
+        private static TypeRegistrar GetTypeRegistrar(string[] args)
         {
-            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(
+                builder =>
+                {
+                    builder.AddSimpleConsole(options =>
+                    {
+                        options.IncludeScopes = true;
+                        options.SingleLine = true;
+                        options.TimestampFormat = "hh:mm:ss ";
+                    });
+                    
+                    if(args?.Any(x => x.Contains("--debug", StringComparison.InvariantCultureIgnoreCase)) ?? false)
+                    {
+                        builder.SetMinimumLevel(LogLevel.Debug);
+                    }
+                });
+            serviceCollection.AddSingleton<IUserPromptService, UserPromptService>();
+            serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
+            serviceCollection.AddSingleton<IExcelService, ExcelService>();
 
-            var userPromptService = serviceProvider.GetRequiredService<IUserPromptService>();
-
-            string message = args.Length > 0 ? string.Join(' ', args) : null;
-
-            // message ??= userPromptService.SimpleTextPrompt("What is your message?");
-            message ??= userPromptService.PasswordPrompt("What is your password?");
-            // message ??= AnsiConsole.Prompt(
-            //     new TextPrompt<string>("Enter password:")
-            //         .Secret());
-
-            if(string.IsNullOrWhiteSpace(message))
-            {
-                string versionString = Assembly.GetEntryAssembly()?
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                    .InformationalVersion;
-
-                Console.WriteLine($"botsay v{versionString}");
-                Console.WriteLine("-------------");
-                Console.WriteLine("\nUsage:");
-                Console.WriteLine("  botsay <message>");
-                return -99;
-            }
-
-            return ShowBot(message);
-        }
-
-        private static int ShowBot(string message)
-        {
-            string bot = $"\n        {message}";
-            bot += @"
-    __________________
-                      \
-                       \
-                          ....
-                          ....'
-                           ....
-                        ..........
-                    .............'..'..
-                 ................'..'.....
-               .......'..........'..'..'....
-              ........'..........'..'..'.....
-             .'....'..'..........'..'.......'.
-             .'..................'...   ......
-             .  ......'.........         .....
-             .    _            __        ......
-            ..    #            ##        ......
-           ....       .                 .......
-           ......  .......          ............
-            ................  ......................
-            ........................'................
-           ......................'..'......    .......
-        .........................'..'.....       .......
-     ........    ..'.............'..'....      ..........
-   ..'..'...      ...............'.......      ..........
-  ...'......     ...... ..........  ......         .......
- ...........   .......              ........        ......
-.......        '...'.'.              '.'.'.'         ....
-.......       .....'..               ..'.....
-   ..       ..........               ..'........
-          ............               ..............
-         .............               '..............
-        ...........'..              .'.'............
-       ...............              .'.'.............
-      .............'..               ..'..'...........
-      ...............                 .'..............
-       .........                        ..............
-        .....
-";
-            Console.WriteLine(bot);
-
-            return 1;
+            return new TypeRegistrar(serviceCollection);
         }
     }
 }

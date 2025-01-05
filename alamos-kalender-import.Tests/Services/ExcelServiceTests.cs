@@ -22,7 +22,7 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
         {
             var fileName = "Kalender.xlsx";
             
-            List<CalendarEntry> result = _excelService.GetCalendarEntries(fileName);
+            List<CalendarEvent> result = _excelService.GetCalendarEvents(fileName);
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 3);
         }

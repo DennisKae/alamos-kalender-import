@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using Ardalis.GuardClauses;
 using CsvHelper;
 using CsvHelper.Excel;
@@ -15,7 +14,7 @@ namespace DennisKae.alamos_kalender_import.Core.Services
     public class ExcelService : IExcelService
     {
         /// <summary>Liefert die Kalendereinträge aus dem Excel File im dem angegebenen Dateipfad.</summary>
-        public List<CalendarEntry> GetCalendarEntries(string filepath)
+        public List<CalendarEvent> GetCalendarEvents(string filepath)
         {
             Guard.Against.NullOrWhiteSpace(filepath, nameof(filepath));
 
@@ -32,8 +31,14 @@ namespace DennisKae.alamos_kalender_import.Core.Services
             using var parser = new ExcelParser(filepath);
             using var reader = new CsvReader(parser);
 
-            IEnumerable<CalendarEntry> calendarEntries = reader.GetRecords<CalendarEntry>();
-            return calendarEntries?.ToList();
+            List<CalendarEvent> calendarEntries = reader.GetRecords<CalendarEvent>().ToList();
+            
+            // Leere Zeilen entfernen
+            calendarEntries.RemoveAll(x =>
+                string.IsNullOrWhiteSpace(x?.Day) && string.IsNullOrWhiteSpace(x?.StartTime) && string.IsNullOrWhiteSpace(x?.EndTime) &&
+                string.IsNullOrWhiteSpace(x?.CalendarName) && string.IsNullOrWhiteSpace(x?.Title));
+            
+            return calendarEntries;
         }
     }
 }
