@@ -13,11 +13,11 @@
         <!-- TODO: best practices durchgehen https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices -->
         <Version>1.0.1</Version>
         <PackageId>alamos-kalender-import</PackageId>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile>..\README.md</PackageReadmeFile>
     </PropertyGroup>
     
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
         <Folder Include="nupkg\" />
     </ItemGroup>
     
