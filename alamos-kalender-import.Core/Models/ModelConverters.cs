@@ -44,11 +44,13 @@ namespace DennisKae.alamos_kalender_import.Core.Models
                 Title = calendarEvent.Title,
                 FirstNotification = new NotificationViewModel
                 {
+                    IsActive = true,
                     Duration = 1,
                     TimeUnit = SharedConstants.NotificationTimeUnitHours
                 },
                 SecondNotification = new NotificationViewModel
                 {
+                    IsActive = true,
                     Duration = 1,
                     TimeUnit = SharedConstants.NotificationTimeUnitDays
                 }

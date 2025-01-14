@@ -5,7 +5,7 @@ namespace DennisKae.alamos_kalender_import.Core.ViewModels
     public class NotificationViewModel
     {
         [JsonPropertyName("active")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [JsonPropertyName("duration")]
         public int Duration { get; set; } = 1;
