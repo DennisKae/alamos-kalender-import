@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DennisKae.alamos_kalender_import.Core;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
@@ -10,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DennisKae.alamos_kalender_import.Tests.Services
 {
-    // [Ignore("Integrationstest")]
+    [Ignore("Integrationstests mit API Requests")]
     [TestClass]
     public class AlamosApiServiceTests
     {
@@ -70,40 +71,79 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
             CalendarResponseViewModel calendar = await _alamosApiService.GetCalendarByName(_testCalendarName);
             Assert.IsNotNull(calendar);
 
-            var request = new CreateCalendarEventViewModel
-            {
-                CalendarEvent = GetCalendarEventViewModel(calendar)
-            };
+            CalendarEventContainerViewModel requestContainer = GetCalendarEventContainerViewModel(calendar);
 
-            CreateCalendarEventViewModel createdCalendarEvent = await _alamosApiService.CreateCalendarEvent(request);
-            Assert.IsNotNull(createdCalendarEvent);
-            Assert.IsNotNull(createdCalendarEvent.CalendarEvent);
-            Assert.IsNotNull(createdCalendarEvent.CalendarEvent.Id);
+            CalendarEventContainerViewModel createdCalendarEventContainer = await _alamosApiService.CreateCalendarEvent(requestContainer);
+            Assert.IsNotNull(createdCalendarEventContainer);
+            Assert.IsNotNull(createdCalendarEventContainer.CalendarEvent);
+            Assert.IsNotNull(createdCalendarEventContainer.CalendarEvent.Id);
         }
-        
+
         [Ignore("Integrationstest")]
         [TestMethod]
-        public async Task DeleteCalendarEventTest()
+        public async Task GetCalendarEventsTest()
+        {
+            // Setzt voraus, dass im aktuellen Monat Termine angelegt wurden
+            List<CalendarEventContainerViewModel> events = await _alamosApiService.GetCalendarEvents(DateTime.Now.Year, DateTime.Now.Month);
+
+            Assert.IsTrue(events?.Count > 0);
+        }
+
+        [Ignore("Integrationstest")]
+        [TestMethod]
+        public async Task CreateGetAndDeleteCalendarEventTest()
         {
             CalendarResponseViewModel calendar = await _alamosApiService.GetCalendarByName(_testCalendarName);
             Assert.IsNotNull(calendar);
 
-            var request = new CreateCalendarEventViewModel
-            {
-                CalendarEvent = GetCalendarEventViewModel(calendar)
-            };
+            CalendarEventContainerViewModel requestContainer = GetCalendarEventContainerViewModel(calendar);
 
-            CreateCalendarEventViewModel createdCalendarEvent = await _alamosApiService.CreateCalendarEvent(request);
-            Assert.IsNotNull(createdCalendarEvent);
-            Assert.IsNotNull(createdCalendarEvent.CalendarEvent);
-            Assert.IsNotNull(createdCalendarEvent.CalendarEvent.Id);
-            
-            await _alamosApiService.DeleteCalendarEvent(calendar.Id, createdCalendarEvent.CalendarEvent.Id);
-            
-            // TODO: Prüfen ob der Eintrag auch wirklich gelöscht wurde.
+            int year = requestContainer.CalendarEvent.StartDate.Year;
+            int month = requestContainer.CalendarEvent.StartDate.Month;
+
+            CalendarEventContainerViewModel createdCalendarEventContainer = await _alamosApiService.CreateCalendarEvent(requestContainer);
+            Assert.IsNotNull(createdCalendarEventContainer);
+            Assert.IsNotNull(createdCalendarEventContainer.CalendarEvent);
+            Assert.IsNotNull(createdCalendarEventContainer.CalendarEvent.Id);
+
+            List<CalendarEventContainerViewModel> allEventsBeforeDelete = await _alamosApiService.GetCalendarEvents(year, month);
+
+            Assert.IsTrue(allEventsBeforeDelete?.Count > 0);
+            Assert.IsTrue(allEventsBeforeDelete.Any(x => x.CalendarEvent.Id == createdCalendarEventContainer.CalendarEvent.Id));
+
+            await _alamosApiService.DeleteCalendarEvent(calendar.Id, createdCalendarEventContainer.CalendarEvent.Id);
+
+            List<CalendarEventContainerViewModel> allEventsAfterDelete = await _alamosApiService.GetCalendarEvents(year, month);
+
+            Assert.IsTrue(allEventsAfterDelete?.Count > 0);
+            Assert.IsTrue(allEventsAfterDelete.All(x => x.CalendarEvent.Id != createdCalendarEventContainer.CalendarEvent.Id));
         }
 
-        private CalendarEventViewModel GetCalendarEventViewModel(CalendarResponseViewModel calendar)
+        [Ignore("Integrationstest")]
+        [TestMethod]
+        public async Task UpdateCalendarEventTest()
+        {
+            CalendarResponseViewModel calendar = await _alamosApiService.GetCalendarByName(_testCalendarName);
+            Assert.IsNotNull(calendar);
+
+            CalendarEventContainerViewModel requestContainer = GetCalendarEventContainerViewModel(calendar);
+
+            CalendarEventContainerViewModel createdEventContainer = await _alamosApiService.CreateCalendarEvent(requestContainer);
+            Assert.IsNotNull(createdEventContainer);
+            Assert.IsNotNull(createdEventContainer.CalendarEvent);
+            Assert.IsNotNull(createdEventContainer.CalendarEvent.Id);
+
+            string updatedEventTitle = createdEventContainer.CalendarEvent.Title + "-Updated";
+            createdEventContainer.CalendarEvent.Title = updatedEventTitle;
+            
+            CalendarEventContainerViewModel updatedEventContainer = await _alamosApiService.UpdateCalendarEvent(createdEventContainer);
+            Assert.IsNotNull(updatedEventContainer?.CalendarEvent?.Id);
+            Assert.AreEqual(updatedEventTitle, updatedEventContainer.CalendarEvent.Title);
+            
+            await _alamosApiService.DeleteCalendarEvent(calendar.Id, createdEventContainer.CalendarEvent.Id);
+        }
+
+        private CalendarEventContainerViewModel GetCalendarEventContainerViewModel(CalendarResponseViewModel calendar)
         {
             Assert.IsNotNull(calendar);
 
@@ -111,7 +151,7 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
             DateTime startDate = new(now.Year, now.Month, now.Day, now.Hour + 1, 0, 0);
             DateTime endDate = startDate.AddHours(1);
 
-            var result = new CalendarEventViewModel
+            var calendarEvent = new CalendarEventViewModel
             {
                 CalendarId = calendar.Id,
                 CalendarName = calendar.Name,
@@ -131,7 +171,7 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
                 }
             };
 
-            return result;
+            return new CalendarEventContainerViewModel { CalendarEvent = calendarEvent };
         }
     }
 }

@@ -106,7 +106,7 @@ namespace DennisKae.alamos_kalender_import.Commands
             CalendarResponseViewModel calendar = allCalendars.FirstOrDefault(x=>x.Name?.Equals(calendarEvent.CalendarName, StringComparison.CurrentCultureIgnoreCase) == true);
             CalendarEventViewModel viewModel = calendarEvent.ToCalendarEventViewModel(calendar);
             
-            var request = new CreateCalendarEventViewModel
+            var request = new CalendarEventContainerViewModel
             {
                 CalendarEvent = viewModel
             };
