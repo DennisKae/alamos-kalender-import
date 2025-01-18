@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
-using DennisKae.alamos_kalender_import.Commands;
+using DennisKae.alamos_kalender_import.Cli.Commands;
+using DennisKae.alamos_kalender_import.Cli.Services;
+using DennisKae.alamos_kalender_import.Cli.Services.Interfaces;
 using DennisKae.alamos_kalender_import.Core;
-using DennisKae.alamos_kalender_import.Core.Services;
-using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace DennisKae.alamos_kalender_import
+namespace DennisKae.alamos_kalender_import.Cli
 {
     public static class Program
     {

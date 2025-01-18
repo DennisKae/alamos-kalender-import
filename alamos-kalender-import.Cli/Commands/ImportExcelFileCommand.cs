@@ -4,17 +4,18 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DennisKae.alamos_kalender_import.Cli.Services.Interfaces;
+using DennisKae.alamos_kalender_import.Cli.Settings;
 using DennisKae.alamos_kalender_import.Core.Models;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using DennisKae.alamos_kalender_import.Core.ViewModels;
 using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
-using DennisKae.alamos_kalender_import.Settings;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using CalendarEvent = DennisKae.alamos_kalender_import.Core.Models.CalendarEvent;
 
-namespace DennisKae.alamos_kalender_import.Commands
+namespace DennisKae.alamos_kalender_import.Cli.Commands
 {
     /// <summary>Befehl zum Import aus einer Excel Datei</summary>
     [Description("Importiert Termine aus einer Excel Datei und lädt sie in einen Alamos FE2 Server hoch.\n" +

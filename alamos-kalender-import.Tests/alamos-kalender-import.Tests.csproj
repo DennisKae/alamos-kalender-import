@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\alamos-kalender-import\alamos-kalender-import.csproj" />
+    <ProjectReference Include="..\alamos-kalender-import.Cli\alamos-kalender-import.Cli.csproj" />
   </ItemGroup>
 
   <ItemGroup>

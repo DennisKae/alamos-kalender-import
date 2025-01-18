@@ -1,7 +1,7 @@
 using System;
 using Spectre.Console.Cli;
 
-namespace DennisKae.alamos_kalender_import
+namespace DennisKae.alamos_kalender_import.Cli
 {
     /// <summary>
     /// Represents a type resolver.

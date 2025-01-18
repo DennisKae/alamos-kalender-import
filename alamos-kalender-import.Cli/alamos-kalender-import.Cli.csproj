@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
-        <RootNamespace>DennisKae.alamos_kalender_import</RootNamespace>
+        <RootNamespace>DennisKae.alamos_kalender_import.Cli</RootNamespace>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>alamos-kalender-import</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -12,7 +12,7 @@
     <PropertyGroup>
         <!-- TODO: best practices durchgehen https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices -->
         <Version>1.0.1</Version>
-        <PackageId>alamos-kalender-import</PackageId>
+        <PackageId>alamos-kalender-import.Cli</PackageId>
         <PackageReadmeFile>..\README.md</PackageReadmeFile>
     </PropertyGroup>
     

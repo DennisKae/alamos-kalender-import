@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alamos-kalender-import", "alamos-kalender-import\alamos-kalender-import.csproj", "{53FB5370-944E-4222-82AD-0E85999FD466}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alamos-kalender-import.Cli", "alamos-kalender-import.Cli\alamos-kalender-import.Cli.csproj", "{53FB5370-944E-4222-82AD-0E85999FD466}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A6D304C-4157-4B55-9EA0-5A1732E73FCF}"
 	ProjectSection(SolutionItems) = preProject

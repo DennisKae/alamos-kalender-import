@@ -1,8 +1,8 @@
 using System.ComponentModel;
-using DennisKae.alamos_kalender_import.Commands;
+using DennisKae.alamos_kalender_import.Cli.Commands;
 using Spectre.Console.Cli;
 
-namespace DennisKae.alamos_kalender_import.Settings
+namespace DennisKae.alamos_kalender_import.Cli.Settings
 {
     /// <summary>CLI Settings für den <see cref="ImportExcelFileCommand"/></summary>
     public class ImportExcelFileSettings : CommandSettings
