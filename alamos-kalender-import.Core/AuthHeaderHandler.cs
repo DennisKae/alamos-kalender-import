@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,11 +14,13 @@ namespace DennisKae.alamos_kalender_import.Core
     {
         private readonly ILogger _logger;
         private readonly string _apiToken;
-        
+        private readonly bool _disableLogging;
+
         public AuthHeaderHandler(ILogger logger, string apiToken) : base(new HttpClientHandler())
         {
             _logger = logger;
             _apiToken = apiToken;
+            _disableLogging = Environment.GetEnvironmentVariable(SharedConstants.DisableApiLoggingEnvironmentVariableName)?.ToLower() == "true";
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(
@@ -30,29 +34,35 @@ namespace DennisKae.alamos_kalender_import.Core
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("JWT", _apiToken);
             }
-            
-            _logger.LogDebug($"Request: {request}");
-            if (request.Content != null)
+
+            if(!_disableLogging)
             {
-                string content = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
-                _logger.LogDebug($"Request Content: {content}");
+                _logger.LogDebug($"Request: {request}");
+                if(request.Content != null)
+                {
+                    string content = await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                    _logger.LogDebug($"Request Content: {content}");
+                }
             }
 
-            var responseElapsedTime = Stopwatch.StartNew();
-            var response = await base.SendAsync(request, cancellationToken);
+            Stopwatch responseElapsedTime = Stopwatch.StartNew();
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
-            _logger.LogDebug($"Response: {response}");
-            if (response.Content != null)
+            if(!_disableLogging)
             {
+                _logger.LogDebug($"Response: {response}");
                 string content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                 _logger.LogDebug($"Response Content: {content}");
             }
 
             responseElapsedTime.Stop();
-            _logger.LogDebug($"Response elapsed time: {responseElapsedTime.ElapsedMilliseconds} ms");
-
             totalElapsedTime.Stop();
-            _logger.LogDebug($"Total elapsed time: {totalElapsedTime.ElapsedMilliseconds} ms");
+
+            if(!_disableLogging)
+            {
+                _logger.LogDebug($"Response elapsed time: {responseElapsedTime.ElapsedMilliseconds} ms");
+                _logger.LogDebug($"Total elapsed time: {totalElapsedTime.ElapsedMilliseconds} ms");
+            }
 
             return response;
         }

@@ -1,3 +1,4 @@
+using System;
 using Ardalis.GuardClauses;
 using DennisKae.alamos_kalender_import.Core;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
@@ -55,5 +56,7 @@ namespace DennisKae.alamos_kalender_import.Tests
         }
         
         public static string GetTestCalendarName() => GetRequiredUserSecret("TestCalendarName");
+
+        public static void DisableApiLogging() => Environment.SetEnvironmentVariable(SharedConstants.DisableApiLoggingEnvironmentVariableName, "true");
     }
 }
