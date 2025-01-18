@@ -23,20 +23,26 @@ namespace DennisKae.alamos_kalender_import.Commands
     public class ImportExcelFileCommand : AsyncCommand<ImportExcelFileSettings>
     {
         private readonly IExcelService _excelService;
-        private readonly IAlamosApiService _alamosApiService;
         private readonly IUserPromptService _userPromptService;
+        private readonly ICalendarApiService _calendarApiService;
+        private readonly ICalendarEventApiService _calendarEventApiService;
+        private readonly IApiConnectionService _apiConnectionService;
         private readonly ILogger<ImportExcelFileCommand> _logger;
 
         /// <summary>Konstruktor</summary>
         public ImportExcelFileCommand(
             IExcelService excelService,
-            IAlamosApiService alamosApiService,
             IUserPromptService userPromptService,
+            ICalendarApiService calendarApiService,
+            ICalendarEventApiService calendarEventApiService,
+            IApiConnectionService apiConnectionService,
             ILogger<ImportExcelFileCommand> logger)
         {
             _excelService = excelService;
-            _alamosApiService = alamosApiService;
             _userPromptService = userPromptService;
+            _calendarApiService = calendarApiService;
+            _calendarEventApiService = calendarEventApiService;
+            _apiConnectionService = apiConnectionService;
             _logger = logger;
         }
 
@@ -62,7 +68,7 @@ namespace DennisKae.alamos_kalender_import.Commands
 
             await ValidateAlamosSettings(settings);
 
-            List<CalendarResponseViewModel> allCalendars = await _alamosApiService.GetCalendars();
+            List<CalendarResponseViewModel> allCalendars = await _calendarApiService.GetCalendars();
             if(allCalendars?.Any() != true)
             {
                 _logger.LogError("Es konnten keine Kalender vom FE2 Server abgerufen werden.");
@@ -111,7 +117,7 @@ namespace DennisKae.alamos_kalender_import.Commands
                 CalendarEvent = viewModel
             };
             
-            await _alamosApiService.CreateCalendarEvent(request);
+            await _calendarEventApiService.CreateCalendarEvent(request);
         }
 
         private async Task ValidateAlamosSettings(ImportExcelFileSettings settings)
@@ -143,11 +149,11 @@ namespace DennisKae.alamos_kalender_import.Commands
                     settings.Password = AnsiConsole.Prompt(new TextPrompt<string>("Passwort:").Secret());
                 }
 
-                _alamosApiService.Initialize(settings.Server, settings.Username, settings.Password);
+                _apiConnectionService.Initialize(settings.Server, settings.Username, settings.Password);
 
                 try
                 {
-                    string apiKey = await _alamosApiService.GetApiTokenWithCache();
+                    string apiKey = await _apiConnectionService.GetApiTokenWithCache();
                     if(!string.IsNullOrWhiteSpace(apiKey))
                     {
                         connectionTestWasSuccessful = true;

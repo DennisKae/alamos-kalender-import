@@ -10,18 +10,19 @@ namespace DennisKae.alamos_kalender_import.Tests.Services
     public class ExcelServiceTests
     {
         private IExcelService _excelService;
-        
+
         [TestInitialize]
         public void InitializeExcelService()
         {
-            _excelService = Util.GetServiceProvider().GetRequiredService<IExcelService>();
+            _excelService = Util.GetServiceProvider(true)
+                .GetRequiredService<IExcelService>();
         }
 
         [TestMethod]
         public void GetCalendarEntriesTest()
         {
             var fileName = "Kalender.xlsx";
-            
+
             List<CalendarEvent> result = _excelService.GetCalendarEvents(fileName);
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 3);

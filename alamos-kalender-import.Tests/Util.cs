@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using DennisKae.alamos_kalender_import.Core.Services;
+using DennisKae.alamos_kalender_import.Core;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using DennisKae.alamos_kalender_import.Tests.Services;
 using Microsoft.Extensions.Configuration;
@@ -14,40 +14,46 @@ namespace DennisKae.alamos_kalender_import.Tests
         public static string GetRequiredUserSecret(string key)
         {
             IConfigurationRoot configurationRoot = new ConfigurationBuilder()
-                .AddUserSecrets(typeof(AlamosApiServiceTests).Assembly, false)
+                .AddUserSecrets(typeof(ApiConnectionServiceTests).Assembly, false)
                 .Build();
-            
+
             string result = configurationRoot[key];
-            
+
             if(string.IsNullOrWhiteSpace(result))
             {
-                throw new NotFoundException(key,$"Es konnte kein User Secret mit dem Key {key} gefunden werden.");
+                throw new NotFoundException(key, $"Es konnte kein User Secret mit dem Key {key} gefunden werden.");
             }
-            
+
             return result;
         }
 
-        public static ServiceProvider GetServiceProvider()
+        public static ServiceProvider GetServiceProvider(bool setLogLevelToDebug)
         {
             var serviceCollection = new ServiceCollection();
+            serviceCollection.AddCoreServices();
+            
             serviceCollection.AddLogging(builder =>
-                builder.AddDebug()
-                    .SetMinimumLevel(LogLevel.Debug)
+                {
+                    builder.AddDebug();
+                    if(setLogLevelToDebug)
+                    {
+                        builder.SetMinimumLevel(LogLevel.Debug);
+                    }
+                }
             );
-            
-            serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
-            serviceCollection.AddSingleton<IExcelService, ExcelService>();
-            
+
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-            
-            IAlamosApiService alamosApiService = serviceProvider.GetRequiredService<IAlamosApiService>();
+
+            IApiConnectionService apiConnectionService = serviceProvider.GetRequiredService<IApiConnectionService>();
 
             string serverUrl = Util.GetRequiredUserSecret("ServerUrl");
             string username = Util.GetRequiredUserSecret("Username");
             string password = Util.GetRequiredUserSecret("Password");
-            alamosApiService.Initialize(serverUrl, username, password);
-            
+            apiConnectionService.Initialize(serverUrl, username, password);
+
             return serviceProvider;
         }
+        
+        public static string GetTestCalendarName() => GetRequiredUserSecret("TestCalendarName");
     }
 }

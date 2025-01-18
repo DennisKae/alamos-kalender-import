@@ -12,12 +12,12 @@ namespace DennisKae.alamos_kalender_import.Settings
         [CommandOption("-s|--server <URL>")]
         public string Server { get; set; }
 
-        /// <summary>Benutzername zum Login</summary>
+        /// <summary>Benutzername zum Login am FE2 Server</summary>
         [CommandOption("-b|--benutzername <Benutzername>")]
         [Description("Benutzername zum Login am FE2 Server. Admin-Benutzer werden nicht unterstützt.")]
         public string Username { get; set; }
 
-        /// <summary>Passwort zum Login</summary>
+        /// <summary>Passwort zum Login am FE2 Server</summary>
         [CommandOption("-p|--passwort <Passwort>")]
         [Description("Passwort zum Login am FE2 Server.")]
         public string Password { get; set; }

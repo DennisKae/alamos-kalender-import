@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DennisKae.alamos_kalender_import.Commands;
+using DennisKae.alamos_kalender_import.Core;
 using DennisKae.alamos_kalender_import.Core.Services;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,7 @@ namespace DennisKae.alamos_kalender_import
                     {
                         options.IncludeScopes = true;
                         options.SingleLine = true;
-                        options.TimestampFormat = "hh:mm:ss ";
+                        options.TimestampFormat = "HH:mm:ss ";
                     });
                     
                     if(args?.Any(x => x.Contains("--debug", StringComparison.InvariantCultureIgnoreCase)) ?? false)
@@ -57,8 +58,7 @@ namespace DennisKae.alamos_kalender_import
                     }
                 });
             serviceCollection.AddSingleton<IUserPromptService, UserPromptService>();
-            serviceCollection.AddSingleton<IAlamosApiService, AlamosApiService>();
-            serviceCollection.AddSingleton<IExcelService, ExcelService>();
+            serviceCollection.AddCoreServices();
 
             return new TypeRegistrar(serviceCollection);
         }
