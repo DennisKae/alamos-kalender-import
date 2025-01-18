@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using DennisKae.alamos_kalender_import.Core.Models;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
+using DennisKae.alamos_kalender_import.Core.Services.RestServices.Interfaces;
 using DennisKae.alamos_kalender_import.Core.ViewModels.RequestViewModels;
 using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
 using Microsoft.Extensions.Caching.Memory;
@@ -74,10 +74,10 @@ namespace DennisKae.alamos_kalender_import.Core.Services
         /// <summary>Liefert den API-Token zum angegebenen Benutzernamen und Passwort</summary>
         public async Task<string> GetApiToken()
         {
-            IAlamosRestApiService alamosRestApiService = await GetRestService<IAlamosRestApiService>(false);
+            IAuthRestService authRestService = await GetRestService<IAuthRestService>(false);
             var loginRequest = new LoginRequestViewModel { Username = _username, Password = _password };
 
-            LoginResponseViewModel loginResponse = await alamosRestApiService.Login(loginRequest);
+            LoginResponseViewModel loginResponse = await authRestService.Login(loginRequest);
 
             return loginResponse.ApiToken;
         }

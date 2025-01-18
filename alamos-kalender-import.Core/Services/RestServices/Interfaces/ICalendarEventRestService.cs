@@ -1,21 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DennisKae.alamos_kalender_import.Core.ViewModels;
-using DennisKae.alamos_kalender_import.Core.ViewModels.RequestViewModels;
-using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
 using Refit;
 
-namespace DennisKae.alamos_kalender_import.Core.Services.Interfaces
+namespace DennisKae.alamos_kalender_import.Core.Services.RestServices.Interfaces
 {
-    /// <summary>Service mit den konkreten REST API Methoden</summary>
-    public interface IAlamosRestApiService
+    /// <summary>Service mit den REST API Methoden für Calendar Events</summary>
+    public interface ICalendarEventRestService
     {
-        [Post("/rest/login")]
-        Task<LoginResponseViewModel> Login(LoginRequestViewModel model);
-
-        [Get("/rest/eventPlanning/calendars?simplified=true")]
-        Task<List<CalendarResponseViewModel>> GetCalendars();
-        
         [Post("/rest/eventPlanning/calendars/{calendarId}/events?notify=false")]
         Task<CalendarEventContainerViewModel> CreateCalendarEvent([Query]string calendarId, CalendarEventContainerViewModel model);
         

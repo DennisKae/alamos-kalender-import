@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using DennisKae.alamos_kalender_import.Core.Models;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
+using DennisKae.alamos_kalender_import.Core.Services.RestServices.Interfaces;
 using DennisKae.alamos_kalender_import.Core.ViewModels.ResponseViewModels;
 
 namespace DennisKae.alamos_kalender_import.Core.Services
@@ -23,8 +23,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services
         /// <summary>Liefert alle verfügbaren Kalender</summary>
         public async Task<List<CalendarResponseViewModel>> GetCalendars()
         {
-            IAlamosRestApiService alamosRestApiService = await _apiConnectionService.GetRestService<IAlamosRestApiService>();
-            return await alamosRestApiService.GetCalendars();
+            ICalendarRestService calendarRestService = await _apiConnectionService.GetRestService<ICalendarRestService>();
+            return await calendarRestService.GetCalendars();
         }
 
         /// <summary>Liefert den Kalender mit der angegebenen Bezeichnung</summary>

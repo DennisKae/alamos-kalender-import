@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using DennisKae.alamos_kalender_import.Core.Models;
 using DennisKae.alamos_kalender_import.Core.Services.Interfaces;
+using DennisKae.alamos_kalender_import.Core.Services.RestServices.Interfaces;
 using DennisKae.alamos_kalender_import.Core.ViewModels;
 
 namespace DennisKae.alamos_kalender_import.Core.Services
@@ -25,8 +25,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services
             Guard.Against.Null(request, nameof(request));
             Guard.Against.Null(request.CalendarEvent, nameof(request.CalendarEvent));
 
-            IAlamosRestApiService alamosRestApiService = await _apiConnectionService.GetRestService<IAlamosRestApiService>();
-            return await alamosRestApiService.CreateCalendarEvent(request.CalendarEvent.CalendarId, request);
+            ICalendarEventRestService calendarEventRestService = await _apiConnectionService.GetRestService<ICalendarEventRestService>();
+            return await calendarEventRestService.CreateCalendarEvent(request.CalendarEvent.CalendarId, request);
         }
 
         /// <summary>Löscht einen Kalendereintrag</summary>
@@ -35,8 +35,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services
             Guard.Against.NullOrWhiteSpace(calenderId, nameof(calenderId));
             Guard.Against.NullOrWhiteSpace(calendarEventId, nameof(calendarEventId));
 
-            IAlamosRestApiService alamosRestApiService = await _apiConnectionService.GetRestService<IAlamosRestApiService>();
-            await alamosRestApiService.DeleteCalendarEvent(calenderId, calendarEventId);
+            ICalendarEventRestService calendarEventRestService = await _apiConnectionService.GetRestService<ICalendarEventRestService>();
+            await calendarEventRestService.DeleteCalendarEvent(calenderId, calendarEventId);
         }
 
         /// <summary>Liefert die Kalendereinträge des angegebenen Monats im angegebenen Jahr.</summary>
@@ -45,8 +45,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services
             Guard.Against.OutOfRange(year, nameof(year), DateTime.Now.Year - 5, DateTime.Now.Year + 5);
             Guard.Against.OutOfRange(month, nameof(month), 1, 12);
 
-            IAlamosRestApiService alamosRestApiService = await _apiConnectionService.GetRestService<IAlamosRestApiService>();
-            return await alamosRestApiService.GetCalendarEvents(year, month);
+            ICalendarEventRestService calendarEventRestService = await _apiConnectionService.GetRestService<ICalendarEventRestService>();
+            return await calendarEventRestService.GetCalendarEvents(year, month);
         }
 
         /// <summary>Aktualisiert einen Kalendereintrag</summary>
@@ -59,8 +59,8 @@ namespace DennisKae.alamos_kalender_import.Core.Services
             Guard.Against.NullOrWhiteSpace(updatedEvent.CalendarEvent.Id, nameof(updatedEvent.CalendarEvent.Id));
             Guard.Against.NullOrWhiteSpace(updatedEvent.CalendarEvent.CalendarId, nameof(updatedEvent.CalendarEvent.CalendarId));
 
-            IAlamosRestApiService alamosRestApiService = await _apiConnectionService.GetRestService<IAlamosRestApiService>();
-            return await alamosRestApiService.UpdateCalendarEvent(updatedEvent.CalendarEvent.CalendarId, updatedEvent.CalendarEvent.Id, updatedEvent);
+            ICalendarEventRestService calendarEventRestService = await _apiConnectionService.GetRestService<ICalendarEventRestService>();
+            return await calendarEventRestService.UpdateCalendarEvent(updatedEvent.CalendarEvent.CalendarId, updatedEvent.CalendarEvent.Id, updatedEvent);
         }
     }
 }
