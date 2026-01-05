@@ -63,6 +63,16 @@ namespace DennisKae.alamos_kalender_import.Core.Models
             result.StartDate = new DateTime(day.Year, day.Month, day.Day, startTime.Hour, startTime.Minute, startTime.Second);
             result.EndDate = new DateTime(day.Year, day.Month, day.Day, endTime.Hour, endTime.Minute, endTime.Second);
 
+            if (!string.IsNullOrWhiteSpace(calendarEvent.ResponsiblePerson))
+            {
+                result.ResponsiblePerson = calendarEvent.ResponsiblePerson;
+            }
+
+            if (!string.IsNullOrWhiteSpace(calendarEvent.Location))
+            {
+                result.Location = calendarEvent.Location;
+            }
+            
             return result;
         }
     }

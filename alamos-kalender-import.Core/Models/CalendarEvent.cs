@@ -8,6 +8,7 @@ namespace DennisKae.alamos_kalender_import.Core.Models
     {
         [Name("Datum")]
         public string Day { get; set; }
+        
         public string CleanedDay => DateTime.TryParse(Day, out DateTime dateTime) ? dateTime.ToString("dd.MM.yyyy") : null;
 
         [Name("Start")]
@@ -25,5 +26,11 @@ namespace DennisKae.alamos_kalender_import.Core.Models
 
         [Name("Titel")]
         public string Title { get; set; }
+
+        [Name("Verantwortlich")]
+        public string ResponsiblePerson { get; set; }
+
+        [Name("Ort")]
+        public string Location { get; set; }
     }
 }
