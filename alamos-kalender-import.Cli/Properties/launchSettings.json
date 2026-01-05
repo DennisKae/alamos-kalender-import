@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "--help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "Import Testfile": {
+      "commandName": "Project",
+      "commandLineArgs": "-e ../../../../alamos-kalender-import.Tests/Kalender.xlsx",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "Import Testfile und Termine vor dem 01.02.2026 ignorieren": {
+      "commandName": "Project",
+      "commandLineArgs": "-e ../../../../alamos-kalender-import.Tests/Kalender.xlsx --ignore-before 01.02.2026",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

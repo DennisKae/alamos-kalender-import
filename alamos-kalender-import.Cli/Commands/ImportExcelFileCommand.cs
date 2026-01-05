@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using DennisKae.alamos_kalender_import.Cli.Services.Interfaces;
 using DennisKae.alamos_kalender_import.Cli.Settings;
 using DennisKae.alamos_kalender_import.Core.Models;
@@ -53,6 +56,9 @@ namespace DennisKae.alamos_kalender_import.Cli.Commands
             ValidateExcelFileSetting(settings);
 
             List<CalendarEvent> calendarEvents = _excelService.GetCalendarEvents(settings.ExcelFilePath);
+
+            calendarEvents = RemoveCalendarEventsBeforeSpecifiedDate(calendarEvents, settings);
+            
             if(calendarEvents?.Any() != true)
             {
                 _logger.LogInformation("Es wurden keine Kalendereinträge in der Excel Datei gefunden. \nAusgewertete Excel-Datei: " +
@@ -233,7 +239,9 @@ namespace DennisKae.alamos_kalender_import.Cli.Commands
                 .AddColumn("Start")
                 .AddColumn("Ende")
                 .AddColumn("Kalender")
-                .AddColumn("Titel");
+                .AddColumn("Titel")
+                .AddColumn("Ort")
+                .AddColumn("Verantwortlich");
         }
 
         private void AddCalendarEventToTable(CalendarEvent calendarEvent, int index, Table table)
@@ -246,6 +254,8 @@ namespace DennisKae.alamos_kalender_import.Cli.Commands
                 calendarEvent.CleanedEndTime ?? string.Empty,
                 calendarEvent.CalendarName ?? string.Empty,
                 calendarEvent.Title,
+                calendarEvent.Location,
+                calendarEvent.ResponsiblePerson
             };
 
             table.AddRow(columns.ToArray());
@@ -262,6 +272,29 @@ namespace DennisKae.alamos_kalender_import.Cli.Commands
             }
 
             AnsiConsole.Write(table);
+        }
+
+        private List<CalendarEvent> RemoveCalendarEventsBeforeSpecifiedDate(List<CalendarEvent> calendarEvents, ImportExcelFileSettings settings)
+        {
+            Guard.Against.Null(settings);
+            
+            if (calendarEvents?.Any() != true || string.IsNullOrWhiteSpace(settings.IgnoreEventsBeforeDate))
+            {
+                return calendarEvents;
+            }
+
+            if (!DateTime.TryParseExact(settings.IgnoreEventsBeforeDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+            {
+                throw new ValidationException($"Das angegebene Datum \"{settings.IgnoreEventsBeforeDate}\", vor dem Kalendereinträge ignoriert werden sollen, ist nicht im korrekten Format \"dd.MM.yyyy\".");
+            }
+            
+            List<CalendarEvent> eventsToRemove = calendarEvents.Where(x=>DateTime.Parse(x.CleanedDay) < parsedDate).ToList();
+            if (eventsToRemove.Count > 0)
+            {
+                _logger.LogInformation($"{eventsToRemove.Count} Termine lagen vor dem {settings.IgnoreEventsBeforeDate} und werden ignoriert.");
+                calendarEvents.RemoveAll(x=>eventsToRemove.Contains(x));
+            }
+            return calendarEvents;
         }
     }
 }

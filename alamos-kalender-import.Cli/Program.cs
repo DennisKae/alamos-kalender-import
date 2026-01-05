@@ -37,6 +37,10 @@ namespace DennisKae.alamos_kalender_import.Cli
                 AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
                 return -99;
             }
+            finally
+            {
+                AnsiConsole.Write(new Rule("[yellow]Programm beendet[/]").LeftJustified());
+            }
         }
 
         private static TypeRegistrar GetTypeRegistrar(string[] args)

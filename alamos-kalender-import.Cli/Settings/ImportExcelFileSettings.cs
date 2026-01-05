@@ -27,6 +27,11 @@ namespace DennisKae.alamos_kalender_import.Cli.Settings
         [Description("Pfad zur Excel Datei.")]
         public string ExcelFilePath { get; set; }
 
+        /// <summary>Ignoriert Termine in der Excel Datei, die vor dem angegebenen Datum liegen.</summary>
+        [CommandOption("--ignore-before <Datum>")]
+        [Description("Ignoriert Termine in der Excel Datei, die vor dem angegebenen Datum liegen. Das Datum muss im Format \"dd.MM.yyyy\" angegeben werden.")]
+        public string IgnoreEventsBeforeDate { get; set; }
+        
         /// <summary>Gibt, z.B. bei Problemen mit der Netzwerkverbindungen, mehr Details aus.</summary>
         [CommandOption("--debug")]
         [Description("Gibt, z.B. bei Problemen mit der Netzwerkverbindungen, mehr Details aus.")]
